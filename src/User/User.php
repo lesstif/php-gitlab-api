@@ -7,68 +7,28 @@ use Lesstif\GitLabApi\ClassSerialize;
 /**
  * Description of User.
  *
- * @author Anik
  */
 class User implements \JsonSerializable
 {
     use ClassSerialize;
 
-    /**
-     * uri which was hit.
-     *
-     * @var string
-     */
-    public $self;
+    /** @var int */
+    public $id;
 
-    /**
-     * @var string
-     */
-    public $key;
+    /** @var  string */
+    public $username;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $name;
 
-    /**
-     * @var string
-     */
-    public $emailAddress;
+    /** @var string */
+    public $state;
 
-    /**
-     * @var object
-     */
-    public $avatarUrls;
+    /** @var string */
+    public $avatar_url;
 
-    /**
-     * @var string
-     */
-    public $displayName;
-
-    /**
-     * @var bool
-     */
-    public $active;
-
-    /**
-     * @var string
-     */
-    public $timeZone;
-
-    /**
-     * @var array "#/definitions/simple-list-wrapper"
-     */
-    public $groups;
-
-    /**
-     * @var array "#/definitions/simple-list-wrapper"
-     */
-    public $applicationRoles;
-
-    /**
-     * @var string
-     */
-    public $expand;
+    /** @var string */
+    public $web_url;
 
     public function jsonSerialize()
     {
