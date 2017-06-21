@@ -10,35 +10,16 @@ use Lesstif\GitLabApi\HttpClient;
  */
 class UserService extends HttpClient
 {
-    use \App\Env;
-
 	private $userList = 'users.json';
 
-    public function __construct($path = null)
-    {
-        $this->envLoad($path);
-    }
-
-	/**
-     * get gitlab username (aka 'lesstif') by id(int: 1)
+    /**
+     * fetch users list from gitlab.
      *
-     * @param type $id
      * @return type
      */
-    public function getGitUser($id)
+    public function getAllUsers($queryParam = [])
     {
-        $users = $this->loadGitLabUser();
-
-        //dd($users);
-        $u = array_get($users, $id);
-        if ( is_null($u))
-        {
-            Log::debug("user($id) not found: fetching..");
-            // get user info
-            $u = $this->getUser($id);
-        }
-
-        return $u;
+        return $this->request('users');
     }
 
     /**
@@ -46,10 +27,11 @@ class UserService extends HttpClient
      * @param type $id gitlab userid(int)
      * @return type
      */
-    private function getUser($id)
+    private function get($id)
     {
         $client = new HttpClient();
-        $u = $client->getUser($id);
+
+        $u = $client->get($id);
 
         $user = [
         	'name' => $u->name,
@@ -58,11 +40,6 @@ class UserService extends HttpClient
         	'state' => $u->state,
         	];
 
-        $users = $this->loadGitLabUser();
-
-        $users = array_add($users, $id, $user);
-
-        \Storage::put($this->userList, json_encode($users, JSON_PRETTY_PRINT));
         return $user;
     }
 

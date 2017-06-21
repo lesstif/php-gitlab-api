@@ -1,6 +1,6 @@
 <?php
 
-namespace Lesstif\GitLabApi\Project\Project;
+namespace Lesstif\GitLabApi\Project;
 
 use Lesstif\GitLabApi\ClassSerialize;
 
@@ -8,73 +8,51 @@ class Project
 {
     use ClassSerialize;
 
-    /**
-     * return only if Project query by key(not id).
-     *
-     * @var string
-     */
-    public $expand;
-
-    /**
-     * Project URI.
-     *
-     * @var string
-     */
-    public $self;
-
-    /**
-     * Project id.
-     *
-     * @var string
-     */
+    /** @var  integer */
     public $id;
 
-     /**
-      * Project key.
-      *
-      * @var string
-      */
-     public $key;
+    /** @var null|string */
+    public $description;
 
-     /**
-      * Project name.
-      *
-      * @var string
-      */
-     public $name;
+    /** @var  string */
+    public $default_branch;
 
-     /**
-      * avatar URL.
-      *
-      * @var array
-      */
-     public $avatarUrls;
+    /** @var  string */
+    public $visibility;
 
-     /**
-      * Project category.
-      *
-      * @var array
-      */
-     public $projectCategory;
+    /** @var  string */
+    public $ssh_url_to_repo;
 
-     /* @var string|null */
-     public $description;
+    /** @var  string */
+    public $http_url_to_repo;
 
-     /* Project leader info @var array */
-     public $lead;
+    /** @var  string */
+    public $web_url;
 
-     /* @var ComponentList[\JiraRestApi\Project\Component] */
-     public $components;
+    /** @var array */
+    public $tag_list;
 
-     /* @var IssueTypeList[\JiraRestApi\Issue\IssueType] */
-     public $issueTypes;
+    /** @var  array */
+    public $owner;
 
-     /* @var string */
-     public $assigneeType;
+    /** @var  string */
+    public $name;
 
-     /* @var array */
-     public $versions;
+    /** @var  string */
+    public $name_with_namespace;
 
-      /* @var array */
-     public $roles;
+    /** @var  string */
+    public $path;
+
+    /** @var  string */
+    public $path_with_namespace;
+
+    /** @var boolean */
+    public $issues_enabled;
+
+    /** @var integer */
+    public $open_issues_count;
+
+    /** @var boolean */
+    public $merge_requests_enabled;
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Lesstif\GitLabApi;
 
 /**
@@ -8,4 +7,5 @@ namespace Lesstif\GitLabApi;
  */ 
 class GitLabException extends \Exception
 {
+
 }
