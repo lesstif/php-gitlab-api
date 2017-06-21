@@ -2,8 +2,6 @@
 
 namespace Lesstif\GitLabApi;
 
-use Log;
-
 trait Env {
 	private $dotenv;
 	private $gitHost;

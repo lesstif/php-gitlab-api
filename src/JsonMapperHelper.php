@@ -1,5 +1,5 @@
 <?php
-namespace JiraRestApi;
+namespace Lesstif\GitLabApi;
 
 
 class JsonMapperHelper

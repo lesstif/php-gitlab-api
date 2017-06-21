@@ -1,6 +1,6 @@
 <?php
 
-namespace JiraRestApi;
+namespace Lesstif\GitLabApi;
 
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
