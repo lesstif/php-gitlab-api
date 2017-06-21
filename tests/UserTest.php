@@ -29,13 +29,19 @@ class PushTest extends PHPUnit_Framework_TestCase
 EOD;
 		
 		$mapper = new JsonMapper();
-		$push = $mapper->map(json_decode($json, false), new User());
+		$users = $mapper->mapArray(
+		    json_decode($json),
+            new \ArrayObject(),
+            //'\Lesstif\GitLabApi\User\User'
+            Lesstif\GitLabApi\User\User::class
+        );
 
-		$this->assertEquals("Diaspora", $push->repository->name);
-		$this->assertEquals("da1560886d4f094c3e6c9ef40349f7d38b5d27d7", $push->after);
-		$this->assertEquals("fixed readme", $push->commits[1]->message);
-		$this->assertEquals("GitLab dev user", $push->commits[1]->author->name);
-		var_dump($push);
+		$u = $users[0];
+		$this->assertEquals("1", $u->id);
+		$this->assertEquals("john_smith", $u->username);
+
+		$this->assertEquals("John Smith", $u->name);
+		$this->assertEquals("active", $u->state);
 	}
 
 }
