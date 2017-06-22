@@ -2,33 +2,123 @@
 
 namespace Lesstif\GitLabApi;
 
+use Lesstif\GitLabApi\GitLabException;
+
+use Lesstif\GitLabApi\Configuration\ConfigurationInterface;
+use Lesstif\GitLabApi\Configuration\DotEnvConfiguration;
 use Monolog\Logger as Logger;
 use Monolog\Handler\StreamHandler;
 
 class HttpClient
 {
+	/**
+	 * JIRA REST API URI.
+	 *
+	 * @var string
+	 */
+	protected $API_VERSION = '/api/v4/';
 
-	use \Lesstif\GitLabApi\Env;
+	/**
+	 * GitLab Rest API Configuration.
+	 *
+	 * @var ConfigurationInterface
+	 */
+	protected $configuration;
 
-	public function __construct($path = null)
+	/**
+	 * Monolog instance.
+	 *
+	 * @var \Monolog\Logger
+	 */
+	protected $log;
+
+	/**
+	 * Json Mapper.
+	 *
+	 * @var \JsonMapper
+	 */
+	protected $json_mapper;
+
+	private $gitLabHost;
+	private $gitLabToken;
+
+	/**
+	 * HttpClient constructor.
+	 * @param ConfigurationInterface|null $configuration
+	 * @param Logger|null $logger
+	 * @param string $path
+	 */
+	public function __construct(ConfigurationInterface $configuration = null, Logger $logger = null, $path = './')
 	{
-		$this->envLoad($path);
-	}
+		if ($configuration === null) {
+			if (!file_exists($path . '.env')) {
+				// If calling the getcwd() on laravel it will returning the 'public' directory.
+				$path = '../';
+			}
+			$configuration = new DotEnvConfiguration($path);
+		}
 
-	public function getUser($id)
-	{
-		return $this->request('users/' . $id);
+		$this->configuration = $configuration;
+		$this->json_mapper = new \JsonMapper();
+
+		$this->json_mapper->undefinedPropertyHandler = [\Lesstif\GitLabApi\JsonMapperHelper::class, 'setUndefinedProperty'];
+
+		// create logger
+		if ($logger) {
+			$this->log = $logger;
+		} else {
+			$this->log = new Logger('GitLabClient');
+			$this->log->pushHandler(new StreamHandler(
+				$configuration->getLogFile(),
+				$this->convertLogLevel($configuration->getLogLevel())
+			));
+		}
+
+		// prop setting
+		$this->gitLabHost = $this->configuration->getGitLabHost();
+		$this->gitLabToken = $this->configuration->getGitlabToken();
+
 	}
 
 	/**
-	 * fetch users list from gitlab.
+	 * Convert log level.
 	 *
-	 * @return type
+	 * @param $log_level
+	 *
+	 * @return int
 	 */
-	public function getAllUsers()
+	private function convertLogLevel($log_level)
 	{
-		return $this->request('users');
+		$log_level = strtoupper($log_level);
+
+		switch ($log_level) {
+			case 'EMERGENCY':
+				return Logger::EMERGENCY;
+			case 'ALERT':
+				return Logger::ALERT;
+			case 'CRITICAL':
+				return Logger::CRITICAL;
+			case 'ERROR':
+				return Logger::ERROR;
+			case 'WARNING':
+				return Logger::WARNING;
+			case 'NOTICE':
+				return Logger::NOTICE;
+			case 'DEBUG':
+				return Logger::DEBUG;
+			case 'INFO':
+				return Logger::INFO;
+			default:
+				return Logger::WARNING;
+		}
 	}
+
+	/*
+	public function get($id)
+	{
+		return $this->request('users/' . $id);
+	}
+	*/
 
 	/**
 	 * performing gitlab api request
@@ -39,35 +129,26 @@ class HttpClient
 	public function request($uri)
 	{
 		$client = new \GuzzleHttp\Client([
-            'base_uri' => $this->gitHost,
-            'timeout'  => 10.0,
+            'base_uri' => $this->gitLabHost,
+            'timeout'  => $this->configuration->getTimeout(),
             'verify' => false,
             ]);
 
-        $response = $client->get($this->gitHost . '/api/v3/' . $uri, [
+        $response = $client->get($this->gitLabHost . $this->API_VERSION . $uri, [
             'query' => [
-                'private_token' => $this->gitToken,
+                'private_token' => $this->gitLabToken,
                 'per_page' => 10000
             ],
         ]);
 
+		// TODO add 20X status
         if ($response->getStatusCode() != 200)
         {
-        	throw GitlabException("Http request failed. status code : "
+        	throw GitLabException("Http request failed. status code : "
         		. $response->getStatusCode() . " reason:" . $response->getReasonPhrase());
         }
 
         return json_decode($response->getBody());
-	}
-
-	/**
-	 * get All gitlab projects
-	 * 
-	 * @return [type] [description]
-	 */
-	public function getAllProjects()
-	{
-		return $this->request('projects/all');
 	}
 
 	/**
@@ -94,7 +175,7 @@ class HttpClient
 			$postData['debug'] = fopen(base_path() . '/' . 'debug.txt', 'w');
 		}		
 
-		$request = new \GuzzleHttp\Psr7\Request($method, $this->gitHost . '/api/v3/' . $uri);
+		$request = new \GuzzleHttp\Psr7\Request($method, $this->gitHost . $this->API_VERSION . $uri);
 
 		try{
 			$response = $client->send($request, $postData);

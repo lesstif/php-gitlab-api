@@ -10,23 +10,18 @@ use Lesstif\GitLabApi\HttpClient;
  */
 class ProjectService extends HttpClient
 {
-    use \Lesstif\GitLabApi\Env;
-
-    public function __construct($path = null)
-    {
-        $this->envLoad($path);
-    }
-
     /**
      * Get a list of all GitLab projects
      * 
      */
-    public function allProjects()
+    public function getAlllProjects()
     {    
         $client = new HttpClient();
-        $body = $client->request('projects/all');
+        $body = $client->request('projects');
 
         dump($body);
+
+        return $body;
     }
 
     /**
