@@ -25,15 +25,33 @@ class HttpTest extends TestCase
      *
      * @return void
      */
-    public function testBasicExample()
+    public function testProjectList()
     {
+        $this->markTestSkipped();
         $p = new ProjectService();
 
         $ret = $p->getAlllProjects();
 
-        //$this->assertEquals($this->http, null);
+        var_dump($ret);
+    }
+
+    public function testProjectInfo()
+    {
+        $a = new Lesstif\GitLabApi\Project\Project();
+        
+        $p = new ProjectService();
+
+        $ret = $p->viewProject('247');
 
         var_dump($ret);
     }
 
+    public function testProjectOwned()
+    {
+        $p = new ProjectService();
+
+        $ret = $p->ownedProjects();
+
+        var_dump($ret);
+    }
 }

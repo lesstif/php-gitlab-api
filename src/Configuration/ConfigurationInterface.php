@@ -61,4 +61,11 @@ interface ConfigurationInterface
      * @return integer
      */
     public function getTimeout();
+
+    /**
+     * API version(default: 'v3')
+     *
+     * @return string
+     */
+    public function getApiVersion();
 }

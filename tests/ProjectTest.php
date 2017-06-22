@@ -1,7 +1,7 @@
 <?php
 
 use Lesstif\GitLabApi\GitLabException;
-use Lesstif\GitLabApi\User\User;
+use Lesstif\GitLabApi\Project\Project;
 use PHPUnit\Framework\TestCase;
 
 class ProjectTest extends TestCase
@@ -76,7 +76,7 @@ EOD;
 		$projects = $mapper->mapArray(
 		    json_decode($json),
             new \ArrayObject(),
-            Lesstif\GitLabApi\Project\Project::class
+            '\Lesstif\GitLabApi\Project\Project'
         );
 
 		$u = $projects[0];

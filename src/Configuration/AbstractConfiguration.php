@@ -8,6 +8,13 @@ namespace Lesstif\GitLabApi\Configuration;
 abstract class AbstractConfiguration implements ConfigurationInterface
 {
     /**
+     * api Version
+     *
+     * @var string
+     */
+    protected $apiVersion;
+
+    /**
      * api timeout.
      *
      * @var integer

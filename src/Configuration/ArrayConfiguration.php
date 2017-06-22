@@ -24,6 +24,8 @@ class ArrayConfiguration extends AbstractConfiguration
         }
 
         $this->timeout = 60 * $this->timeout;
+
+        $this->apiVersion = 'v3';
     }
 
     /**
@@ -34,5 +36,15 @@ class ArrayConfiguration extends AbstractConfiguration
     public function getTimeout()
     {
         return $this->timeout;
+    }
+
+    /**
+     * API version(default: 'v3')
+     *
+     * @return string
+     */
+    public function getApiVersion()
+    {
+        return $this->apiVersion;
     }
 }

@@ -23,6 +23,8 @@ class DotEnvConfiguration extends AbstractConfiguration
 
         $this->timeout = 60 * $this->env('TIMEOUT', 1);
 
+        $this->apiVersion = $this->env('GITLAB_API_VERSION', 'v3');
+
         $this->curlOptSslVerifyHost = $this->env('CURLOPT_SSL_VERIFYHOST', false);
         $this->curlOptSslVerifyPeer = $this->env('CURLOPT_SSL_VERIFYPEER', false);
         $this->curlOptVerbose = $this->env('CURLOPT_VERBOSE', false);
@@ -115,5 +117,15 @@ class DotEnvConfiguration extends AbstractConfiguration
     public function getTimeout()
     {
         return $this->timeout;
+    }
+
+    /**
+     * API version(default: 'v3')
+     *
+     * @return string
+     */
+    public function getApiVersion()
+    {
+        return $this->apiVersion;
     }
 }

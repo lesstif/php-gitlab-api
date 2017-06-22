@@ -14,25 +14,25 @@ class Project
     /** @var null|string */
     public $description;
 
-    /** @var  string */
+    /** @var null | string */
     public $default_branch;
 
-    /** @var  string */
+    /** @var null |  string */
     public $visibility;
 
-    /** @var  string */
+    /** @var null |  string */
     public $ssh_url_to_repo;
 
-    /** @var  string */
+    /** @var null |  string */
     public $http_url_to_repo;
 
-    /** @var  string */
+    /** @var null |  string */
     public $web_url;
 
-    /** @var array */
+    /** @var null |  array */
     public $tag_list;
 
-    /** @var  array */
+    /** @var array */
     public $owner;
 
     /** @var  string */

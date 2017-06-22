@@ -1,5 +1,4 @@
 <?php
-
 namespace Lesstif\GitLabApi\Project;
 
 use Lesstif\GitLabApi\HttpClient;
@@ -10,39 +9,68 @@ use Lesstif\GitLabApi\HttpClient;
  */
 class ProjectService extends HttpClient
 {
+    private $URI = 'projects/';
+
     /**
      * Get a list of all GitLab projects
-     * 
+     *
+     * @param array $queryParam
+     *
+     * @return array of Project
      */
-    public function getAlllProjects()
+    public function getAlllProjects($queryParam = [])
     {    
         $client = new HttpClient();
-        $body = $client->request('projects');
 
-        dump($body);
+        $json = $client->request($this->URI);
 
-        return $body;
+        /** @var FIXME
+        $projects = $this->json_mapper->mapArray(
+            $json,
+            new \ArrayObject(),
+            'Lesstif\GitLabApi\Project\Project'
+        );
+
+        return $projects;
+         * */
+        return $json;
     }
 
     /**
      * get a list of projects which owned by auth user.
-     * @return [json] [array of Project]
+     *
+     * @return Project
      */
-    public function ownedProjects()
+    public function ownedProjects($queryParam = [])
     {
         $client = new HttpClient();
-        $projects = $client->request('projects/owned');
+        $json = $client->request($this->URI . 'owned');
 
-        return $projects;
+        //file_put_contents("project-owned.json", $json);
+
+        /* FIXME
+        $project = $this->json_mapper->map(
+            $json,
+            new Project()
+        );
+
+        return $project;
+        */
+        return $json;
     }
 
     public function viewProject($id)
     {
         $client = new HttpClient();
-        $project = $client->request('projects/' . $id);
 
-        dump($project);
-        return json_encode($project, JSON_PRETTY_PRINT);
+        $json = $client->request($this->URI . urlencode($id));
+
+        $project = $this->json_mapper->map(
+            $json,
+            new \Lesstif\GitLabApi\Project\Project
+        );
+
+        return $project;
     }
 
     public function addHookAllProjects(Request $request)

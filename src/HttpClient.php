@@ -16,7 +16,7 @@ class HttpClient
 	 *
 	 * @var string
 	 */
-	protected $API_VERSION = '/api/v4/';
+	protected $API_VERSION = '/api/';
 
 	/**
 	 * GitLab Rest API Configuration.
@@ -78,6 +78,9 @@ class HttpClient
 		$this->gitLabHost = $this->configuration->getGitLabHost();
 		$this->gitLabToken = $this->configuration->getGitlabToken();
 
+		// setting API Version
+        $this->API_VERSION .= $this->configuration->getApiVersion() . '/';
+
 	}
 
 	/**
@@ -124,9 +127,9 @@ class HttpClient
 	 * performing gitlab api request
 	 *
 	 * @param $uri API uri
-	 * @return type json response
+	 * @return string json string
 	 */
-	public function request($uri)
+	public function request($uri, $queryParam = [])
 	{
 		$client = new \GuzzleHttp\Client([
             'base_uri' => $this->gitLabHost,
@@ -135,9 +138,14 @@ class HttpClient
             ]);
 
         $response = $client->get($this->gitLabHost . $this->API_VERSION . $uri, [
+            // TODO $queryParam process
+            /*
             'query' => [
-                'private_token' => $this->gitLabToken,
-                'per_page' => 10000
+                'per_page' => 1000
+            ],
+            */
+            'headers' => [
+                'PRIVATE-TOKEN' => $this->gitLabToken,
             ],
         ]);
 
